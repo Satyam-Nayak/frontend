@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import AuthForm from "./components/AuthForm";
+import TaskDashboard from "./components/TaskDashboard";
+import "./App.css";
 
-function App() {
+export default function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("tm_username");
+    if (saved) setUser(saved);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-bg">
+      <div className="app-glass">
+        {user ? (
+          <TaskDashboard username={user} onLogout={() => setUser(null)} />
+        ) : (
+          <AuthForm onLogin={setUser} />
+        )}
+      </div>
     </div>
   );
 }
-
-export default App;
