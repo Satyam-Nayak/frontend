@@ -13,6 +13,7 @@ export default function TaskDashboard({ username, onLogout }) {
   const [desc, setDesc] = useState("");
   const [filter, setFilter] = useState("all");
   const [error, setError] = useState("");
+  const [dragId, setDragId] = useState(null); // for drag & drop
 
   async function load() {
     try {
@@ -78,15 +79,41 @@ export default function TaskDashboard({ username, onLogout }) {
     return true;
   });
 
-  // helper to give different shapes
+  // different visual shapes like fun note tiles
   function getShapeClass(index) {
     const shapes = ["shape-pill", "shape-tag", "shape-bubble", "shape-notch"];
     return shapes[index % shapes.length];
   }
 
+  // ===== Drag & Drop handlers =====
+  function handleDragStart(id) {
+    setDragId(id);
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault(); // allow drop
+  }
+
+  function handleDrop(targetId) {
+    if (!dragId || dragId === targetId) return;
+
+    setTasks((prev) => {
+      const newTasks = [...prev];
+      const fromIndex = newTasks.findIndex((t) => t.id === dragId);
+      const toIndex = newTasks.findIndex((t) => t.id === targetId);
+      if (fromIndex === -1 || toIndex === -1) return prev;
+
+      const [moved] = newTasks.splice(fromIndex, 1);
+      newTasks.splice(toIndex, 0, moved);
+      return newTasks;
+    });
+
+    setDragId(null);
+  }
+
   return (
     <div className="page dashboard-page">
-      {/* 🔹 Sticky Navbar at top */}
+      {/* Sticky Navbar */}
       <header className="navbar">
         <div className="navbar-left">
           <p className="navbar-greeting">Hey {username}💖</p>
@@ -153,27 +180,21 @@ export default function TaskDashboard({ username, onLogout }) {
             <div className="filter-chips">
               <button
                 type="button"
-                className={
-                  filter === "all" ? "chip chip-active" : "chip"
-                }
+                className={filter === "all" ? "chip chip-active" : "chip"}
                 onClick={() => setFilter("all")}
               >
                 All
               </button>
               <button
                 type="button"
-                className={
-                  filter === "todo" ? "chip chip-active" : "chip"
-                }
+                className={filter === "todo" ? "chip chip-active" : "chip"}
                 onClick={() => setFilter("todo")}
               >
                 To do
               </button>
               <button
                 type="button"
-                className={
-                  filter === "done" ? "chip chip-active" : "chip"
-                }
+                className={filter === "done" ? "chip chip-active" : "chip"}
                 onClick={() => setFilter("done")}
               >
                 Done
@@ -198,6 +219,10 @@ export default function TaskDashboard({ username, onLogout }) {
                       " " +
                       shapeClass
                     }
+                    draggable
+                    onDragStart={() => handleDragStart(t.id)}
+                    onDragOver={handleDragOver}
+                    onDrop={() => handleDrop(t.id)}
                   >
                     <div className="task-main">
                       <input
