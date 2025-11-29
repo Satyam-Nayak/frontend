@@ -13,7 +13,7 @@ export default function TaskDashboard({ username, onLogout }) {
   const [desc, setDesc] = useState("");
   const [filter, setFilter] = useState("all");
   const [error, setError] = useState("");
-  const [dragId, setDragId] = useState(null); // for drag & drop
+  const [dragId, setDragId] = useState(null); // drag & drop
 
   async function load() {
     try {
@@ -79,33 +79,32 @@ export default function TaskDashboard({ username, onLogout }) {
     return true;
   });
 
-  // different visual shapes like fun note tiles
   function getShapeClass(index) {
     const shapes = ["shape-pill", "shape-tag", "shape-bubble", "shape-notch"];
     return shapes[index % shapes.length];
   }
 
-  // ===== Drag & Drop handlers =====
+  // Drag & Drop handlers
   function handleDragStart(id) {
     setDragId(id);
   }
 
   function handleDragOver(e) {
-    e.preventDefault(); // allow drop
+    e.preventDefault();
   }
 
   function handleDrop(targetId) {
     if (!dragId || dragId === targetId) return;
 
     setTasks((prev) => {
-      const newTasks = [...prev];
-      const fromIndex = newTasks.findIndex((t) => t.id === dragId);
-      const toIndex = newTasks.findIndex((t) => t.id === targetId);
+      const list = [...prev];
+      const fromIndex = list.findIndex((t) => t.id === dragId);
+      const toIndex = list.findIndex((t) => t.id === targetId);
       if (fromIndex === -1 || toIndex === -1) return prev;
 
-      const [moved] = newTasks.splice(fromIndex, 1);
-      newTasks.splice(toIndex, 0, moved);
-      return newTasks;
+      const [moved] = list.splice(fromIndex, 1);
+      list.splice(toIndex, 0, moved);
+      return list;
     });
 
     setDragId(null);
@@ -113,12 +112,12 @@ export default function TaskDashboard({ username, onLogout }) {
 
   return (
     <div className="page dashboard-page">
-      {/* Sticky Navbar */}
+      {/* Navbar */}
       <header className="navbar">
         <div className="navbar-left">
-          <p className="navbar-greeting">Hey {username}💖</p>
+          <p className="navbar-greeting">Hey {username} 👋</p>
           <p className="navbar-subtitle">
-            Let’s slay your to-do list today ✨
+            Plan, organize, and win your day 🌟
           </p>
         </div>
         <button
@@ -151,18 +150,18 @@ export default function TaskDashboard({ username, onLogout }) {
 
         {/* Add task */}
         <section className="add-card card">
-          <h3 className="section-title">Add a cute little task 🌈</h3>
+          <h3 className="section-title">Add a new task 🎯</h3>
           <form className="add-form" onSubmit={handleAdd}>
             <input
               className="input"
               type="text"
-              placeholder="Ex: Study React, skincare routine, gym, notes…"
+              placeholder="Example: Project work, workout, call a friend…"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
             <textarea
               className="input textarea"
-              placeholder="Optional note… like time, mood, or reminder 💌"
+              placeholder="Optional details: time, mood, notes…"
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
             />
@@ -176,7 +175,7 @@ export default function TaskDashboard({ username, onLogout }) {
         {/* Tasks */}
         <section className="tasks-section">
           <div className="tasks-header">
-            <h3 className="section-title">Today’s vibes 💫</h3>
+            <h3 className="section-title">Today’s board 🧩</h3>
             <div className="filter-chips">
               <button
                 type="button"
@@ -204,7 +203,7 @@ export default function TaskDashboard({ username, onLogout }) {
 
           {filteredTasks.length === 0 ? (
             <p className="empty-text">
-              No tasks here yet… add something to get started 💕
+              No tasks yet – add something and start your streak 🔥
             </p>
           ) : (
             <div className="tasks-list">

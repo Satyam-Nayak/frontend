@@ -6,11 +6,11 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f2f2f2; /* light gray */
-  color: #000000; /* black text */
+  background: linear-gradient(135deg, #fdfbfb, #e4f2ff); /* soft colorful */
+  color: #111827; /* dark gray text */
 }
 
-/* Full screen layout on laptop */
+/* Full screen layout */
 .app-bg {
   min-height: 100vh;
   display: flex;
@@ -21,13 +21,13 @@ body {
 
 .app-glass {
   width: 100%;
-  max-width: 1400px;           /* a bit wider for laptop */
-  min-height: 100vh;           /* full height */
-  background: #ffffff;         /* white container */
-  border-radius: 0;            /* full-page web app look */
-  border-left: 1px solid #dcdcdc;
-  border-right: 1px solid #dcdcdc;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  max-width: 1400px;
+  min-height: 100vh;
+  background: #ffffff;
+  border-radius: 0;
+  border-left: 1px solid #d1d5db;
+  border-right: 1px solid #d1d5db;
+  box-shadow: 0 0 18px rgba(15, 23, 42, 0.12);
   padding: 16px 24px 24px;
 }
 
@@ -37,35 +37,43 @@ body {
 }
 
 .card {
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 12px;
-  background: #fafafa;
-  border: 1px solid #ddd;
-  box-shadow: none;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
 }
 
 .neon-border {
   border-image: none;
-  border: 1px solid #ccc;
+  border: 1px solid #e5e7eb;
 }
 
 .btn {
-  border-radius: 8px;
+  border-radius: 999px;
   padding: 8px 14px;
   border: none;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 14px;
-  background: #e0e0e0;
-  color: #000000;
+  background: #e5e7eb;
+  color: #111827;
+  transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 .btn:hover {
-  background: #d5d5d5;
+  background: #d1d5db;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
 }
 
 .btn:active {
-  transform: scale(0.96);
+  transform: scale(0.97);
 }
 
 /* ===== Inputs ===== */
@@ -74,22 +82,23 @@ body {
   flex-direction: column;
   font-size: 13px;
   gap: 4px;
-  color: #000000;
-  font-weight: bold;
+  color: #111827;
+  font-weight: 600;
 }
 
 .input {
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 8px 11px;
-  border: 1px solid #cccccc;
+  border: 1px solid #d1d5db;
   background: #ffffff;
-  color: #000000;
+  color: #111827;
   font-size: 13px;
 }
 
 .input:focus {
-  border-color: #999;
-  box-shadow: 0 0 4px rgba(150, 150, 150, 0.4);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  outline: none;
 }
 
 .textarea {
@@ -119,24 +128,26 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   margin-bottom: 4px;
 }
 
 .logo-emoji {
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .logo-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 800;
-  color: #000000;
+  background: linear-gradient(135deg, #6366f1, #ec4899, #22c55e);
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .logo-subtitle {
   margin: 0 0 14px;
   font-size: 13px;
-  color: #444;
+  color: #4b5563;
 }
 
 .auth-tabs {
@@ -144,7 +155,7 @@ body {
   gap: 6px;
   padding: 4px;
   border-radius: 999px;
-  background: #e5e5e5;
+  background: #e5e7eb;
   margin-bottom: 14px;
 }
 
@@ -154,14 +165,15 @@ body {
   border-radius: 999px;
   border: none;
   background: transparent;
-  color: #000;
+  color: #111827;
   font-size: 13px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .tab.active {
-  background: #b3b3b3;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #ffffff;
 }
 
 .auth-form {
@@ -172,35 +184,40 @@ body {
 }
 
 .primary-btn {
-  background: #bfbfbf;
-  color: #000;
-  font-weight: bold;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #ffffff;
 }
 
 .primary-btn:hover {
-  background: #a6a6a6;
+  background: linear-gradient(135deg, #4f46e5, #db2777);
+}
+
+.auth-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #4b5563;
 }
 
 /* Badges */
 .badge {
   padding: 5px 8px;
-  border-radius: 6px;
+  border-radius: 999px;
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .error-badge {
-  background: #ffd6d6;
-  color: #a30000;
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
-/* ===== Navbar (Dashboard top) ===== */
+/* ===== Navbar ===== */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 20;
   background: #ffffff;
-  border-bottom: 1px solid #dcdcdc;
+  border-bottom: 1px solid #e5e7eb;
   padding: 8px 0 10px;
   margin-bottom: 12px;
   display: flex;
@@ -216,14 +233,14 @@ body {
 .navbar-greeting {
   margin: 0;
   font-size: 18px;
-  font-weight: bold;
-  color: #000;
+  font-weight: 700;
+  color: #111827;
 }
 
 .navbar-subtitle {
   margin: 2px 0 0;
   font-size: 13px;
-  color: #444;
+  color: #4b5563;
   font-weight: 500;
 }
 
@@ -231,7 +248,7 @@ body {
   font-size: 13px;
 }
 
-/* Wrapper for rest of dashboard below navbar */
+/* Wrapper for dashboard content */
 .dashboard-content {
   padding-top: 4px;
 }
@@ -254,23 +271,34 @@ body {
 .stat-card {
   flex: 1;
   min-width: 150px;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 10px 12px;
-  background: #e9e9e9;
-  border: 1px solid #c5c5c5;
+  border: none;
+  color: #111827;
+}
+
+.stat-pink {
+  background: linear-gradient(135deg, #fce7f3, #fee2e2);
+}
+
+.stat-purple {
+  background: linear-gradient(135deg, #e0e7ff, #ede9fe);
+}
+
+.stat-blue {
+  background: linear-gradient(135deg, #dbeafe, #ccfbf1);
 }
 
 .stat-label {
   font-size: 12px;
-  color: #333;
-  font-weight: bold;
+  color: #374151;
+  font-weight: 600;
 }
 
 .stat-value {
   margin-top: 4px;
   font-size: 19px;
-  font-weight: bold;
-  color: #000;
+  font-weight: 800;
 }
 
 /* ===== Add task card ===== */
@@ -281,8 +309,8 @@ body {
 .section-title {
   margin: 0 0 8px;
   font-size: 16px;
-  font-weight: bold;
-  color: #000;
+  font-weight: 700;
+  color: #111827;
 }
 
 .add-form {
@@ -291,7 +319,7 @@ body {
   gap: 8px;
 }
 
-/* ===== Tasks list (Google Keep style grid) ===== */
+/* ===== Tasks (Google Keep-style grid) ===== */
 .tasks-section {
   margin-top: 10px;
 }
@@ -312,37 +340,44 @@ body {
   border-radius: 999px;
   padding: 4px 10px;
   font-size: 11px;
-  background: #e0e0e0;
-  border: 1px solid #c7c7c7;
+  background: #e5e7eb;
+  border: 1px solid #d1d5db;
   cursor: pointer;
-  color: #000;
-  font-weight: bold;
+  color: #111827;
+  font-weight: 600;
 }
 
 .chip-active {
-  background: #bfbfbf;
+  background: #6366f1;
+  color: #ffffff;
+  border-color: #4f46e5;
 }
 
-/* Google Keep type grid */
 .tasks-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-/* ===== Task cards base ===== */
+/* Task cards */
 .task-card {
   background: #ffffff;
-  border: 1px solid #cccccc;
-  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
   position: relative;
   padding: 10px;
-  width: 220px;          /* base width */
-  min-height: 110px;     /* base height */
+  width: 220px;
+  min-height: 110px;
   display: flex;
   flex-direction: column;
   gap: 4px;
   cursor: grab;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.15);
 }
 
 .task-card:active {
@@ -350,30 +385,44 @@ body {
 }
 
 .task-todo {
-  background: #ffffff;
+  background: #fefce8;
 }
 
 .task-done {
-  background: #e2ffe6;
-  border-color: #88d89a;
+  background: #dcfce7;
+  border-color: #4ade80;
 }
 
-/* slightly different sizes: smaller / taller like keep notes */
+/* different sizes & shapes */
 .shape-pill {
   width: 230px;
+  border-radius: 999px;
 }
 
 .shape-tag {
   width: 260px;
+  border-radius: 12px 28px 12px 28px;
 }
 
 .shape-bubble {
   width: 200px;
   min-height: 90px;
+  border-radius: 18px;
 }
 
 .shape-notch {
   width: 240px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.shape-notch::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-left: 16px solid transparent;
+  border-bottom: 16px solid rgba(15, 23, 42, 0.08);
 }
 
 /* Content inside note cards */
@@ -392,11 +441,11 @@ body {
   flex: 1;
   background: transparent;
   border: none;
-  border-bottom: 1px solid #ccc;
-  color: #000;
+  border-bottom: 1px dashed #9ca3af;
+  color: #111827;
   font-size: 14px;
   outline: none;
-  font-weight: bold;
+  font-weight: 700;
   padding: 2px 0;
   word-wrap: break-word;
   overflow-wrap: anywhere;
@@ -404,19 +453,19 @@ body {
 
 .task-title-done {
   text-decoration: line-through;
-  color: #4d4d4d;
+  color: #6b7280;
 }
 
 .task-desc-input {
   width: 100%;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: #f7f7f7;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
   padding: 4px 6px;
   font-size: 12px;
-  color: #000;
+  color: #111827;
   resize: vertical;
-  max-height: 80px;            /* prevent going outside */
+  max-height: 80px;
   overflow: auto;
   word-wrap: break-word;
   overflow-wrap: anywhere;
@@ -431,45 +480,30 @@ body {
 
 .task-date {
   font-size: 11px;
-  color: #444;
+  color: #6b7280;
 }
 
 /* Buttons inside card */
 .small {
   padding: 4px 10px;
   font-size: 11px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .danger-btn {
-  background: #ffe0e0;
-  color: #a10000;
-  border: 1px solid #ffb3b3;
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
 }
 
 .danger-btn:hover {
-  background: #ffcccc;
+  background: #fecaca;
 }
 
-/* Notch style corner */
-.shape-notch {
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.shape-notch::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  border-left: 16px solid transparent;
-  border-bottom: 16px solid #e0e0e0;
-}
-
-/* ===== Empty ===== */
+/* Empty state */
 .empty-text {
   font-size: 13px;
-  color: #444;
+  color: #6b7280;
   font-style: italic;
 }
 

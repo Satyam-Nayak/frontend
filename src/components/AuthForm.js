@@ -4,7 +4,7 @@ import { login, register } from "../api";
 export default function AuthForm({ onLogin }) {
   const [mode, setMode] = useState("login");
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");       // ⭐ NEW
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,14 +16,12 @@ export default function AuthForm({ onLogin }) {
 
     try {
       if (mode === "register") {
-        // ⭐ UPDATED: include email
         await register(username, email, password);
       }
 
       const res = await login(username, password);
       localStorage.setItem("tm_username", res.username);
       onLogin(res.username);
-      
     } catch (err) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -35,12 +33,11 @@ export default function AuthForm({ onLogin }) {
     <div className="page auth-page">
       <div className="card auth-card neon-border">
         <div className="logo-text">
-          <span className="logo-emoji">🌸</span>
-          <span className="logo-title">GlowTasks</span>
+          <span className="logo-emoji">🚀</span>
+          <span className="logo-title">TaskFlow</span>
         </div>
-
         <p className="logo-subtitle">
-          Cute little planner for your ✨ everyday ✨ life
+          A colorful space to plan your day – for everyone 🌈
         </p>
 
         <div className="auth-tabs">
@@ -66,14 +63,13 @@ export default function AuthForm({ onLogin }) {
             <input
               className="input"
               type="text"
-              placeholder="pink_unicorn_07"
+              placeholder="your_username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
           </label>
 
-          {/* ⭐ NEW EMAIL FIELD ONLY FOR REGISTER */}
           {mode === "register" && (
             <label className="input-label">
               Email
@@ -104,17 +100,17 @@ export default function AuthForm({ onLogin }) {
 
           <button className="btn primary-btn" type="submit" disabled={loading}>
             {loading
-              ? "Hold on… 💫"
+              ? "Just a moment… ⏳"
               : mode === "login"
-              ? "Login & glow ✨"
-              : "Create my space 💕"}
+              ? "Login & start planning ✅"
+              : "Create my account 🚀"}
           </button>
         </form>
 
         <p className="auth-hint">
           {mode === "login"
-            ? "New here? Tap Sign up to start your glow-up."
-            : "Already have an account? Tap Login babe 💌"}
+            ? "New here? Switch to Sign up to create your account."
+            : "Already have an account? Switch back to Login."}
         </p>
       </div>
     </div>
