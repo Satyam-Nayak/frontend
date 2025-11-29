@@ -4,6 +4,7 @@ import { login, register } from "../api";
 export default function AuthForm({ onLogin }) {
   const [mode, setMode] = useState("login");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");       // ⭐ NEW
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,13 +13,17 @@ export default function AuthForm({ onLogin }) {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       if (mode === "register") {
-        await register(username, password);
+        // ⭐ UPDATED: include email
+        await register(username, email, password);
       }
+
       const res = await login(username, password);
       localStorage.setItem("tm_username", res.username);
       onLogin(res.username);
+      
     } catch (err) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -33,6 +38,7 @@ export default function AuthForm({ onLogin }) {
           <span className="logo-emoji">🌸</span>
           <span className="logo-title">GlowTasks</span>
         </div>
+
         <p className="logo-subtitle">
           Cute little planner for your ✨ everyday ✨ life
         </p>
@@ -66,6 +72,21 @@ export default function AuthForm({ onLogin }) {
               required
             />
           </label>
+
+          {/* ⭐ NEW EMAIL FIELD ONLY FOR REGISTER */}
+          {mode === "register" && (
+            <label className="input-label">
+              Email
+              <input
+                className="input"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </label>
+          )}
 
           <label className="input-label">
             Password
