@@ -6,8 +6,8 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #fdfbfb, #e4f2ff); /* soft colorful */
-  color: #111827; /* dark gray text */
+  background: linear-gradient(135deg, #fdfbfb, #e4f2ff);
+  color: #111827;
 }
 
 /* Full screen layout */
@@ -319,7 +319,7 @@ body {
   gap: 8px;
 }
 
-/* ===== Tasks (Google Keep-style grid) ===== */
+/* ===== Tasks ===== */
 .tasks-section {
   margin-top: 10px;
 }
@@ -359,20 +359,20 @@ body {
   gap: 10px;
 }
 
-/* Task cards */
+/* ===== Uniform task note style (like your screenshot) ===== */
 .task-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
+  background: #fffde7;              /* light pastel yellow */
+  border: 1px solid #facc6b;        /* soft yellow border */
+  border-radius: 20px;              /* rounded corners */
   position: relative;
   padding: 10px;
-  width: 220px;
-  min-height: 110px;
+  width: 260px;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   cursor: grab;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
 }
 
 .task-card:hover {
@@ -384,45 +384,14 @@ body {
   cursor: grabbing;
 }
 
+/* same style for todo/done, only slight background change */
 .task-todo {
-  background: #fefce8;
+  background: #fffde7;
 }
 
 .task-done {
-  background: #dcfce7;
+  background: #eaffec;
   border-color: #4ade80;
-}
-
-/* different sizes & shapes */
-.shape-pill {
-  width: 230px;
-  border-radius: 999px;
-}
-
-.shape-tag {
-  width: 260px;
-  border-radius: 12px 28px 12px 28px;
-}
-
-.shape-bubble {
-  width: 200px;
-  min-height: 90px;
-  border-radius: 18px;
-}
-
-.shape-notch {
-  width: 240px;
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.shape-notch::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  border-left: 16px solid transparent;
-  border-bottom: 16px solid rgba(15, 23, 42, 0.08);
 }
 
 /* Content inside note cards */
@@ -460,7 +429,7 @@ body {
   width: 100%;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
-  background: #f9fafb;
+  background: #fffef5;
   padding: 4px 6px;
   font-size: 12px;
   color: #111827;

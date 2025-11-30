@@ -13,7 +13,7 @@ export default function TaskDashboard({ username, onLogout }) {
   const [desc, setDesc] = useState("");
   const [filter, setFilter] = useState("all");
   const [error, setError] = useState("");
-  const [dragId, setDragId] = useState(null); // drag & drop
+  const [dragId, setDragId] = useState(null); // for drag & drop
 
   async function load() {
     try {
@@ -79,32 +79,27 @@ export default function TaskDashboard({ username, onLogout }) {
     return true;
   });
 
-  function getShapeClass(index) {
-    const shapes = ["shape-pill", "shape-tag", "shape-bubble", "shape-notch"];
-    return shapes[index % shapes.length];
-  }
-
-  // Drag & Drop handlers
+  // ===== Drag & Drop handlers =====
   function handleDragStart(id) {
     setDragId(id);
   }
 
   function handleDragOver(e) {
-    e.preventDefault();
+    e.preventDefault(); // allow drop
   }
 
   function handleDrop(targetId) {
     if (!dragId || dragId === targetId) return;
 
     setTasks((prev) => {
-      const list = [...prev];
-      const fromIndex = list.findIndex((t) => t.id === dragId);
-      const toIndex = list.findIndex((t) => t.id === targetId);
+      const newTasks = [...prev];
+      const fromIndex = newTasks.findIndex((t) => t.id === dragId);
+      const toIndex = newTasks.findIndex((t) => t.id === targetId);
       if (fromIndex === -1 || toIndex === -1) return prev;
 
-      const [moved] = list.splice(fromIndex, 1);
-      list.splice(toIndex, 0, moved);
-      return list;
+      const [moved] = newTasks.splice(fromIndex, 1);
+      newTasks.splice(toIndex, 0, moved);
+      return newTasks;
     });
 
     setDragId(null);
@@ -207,62 +202,57 @@ export default function TaskDashboard({ username, onLogout }) {
             </p>
           ) : (
             <div className="tasks-list">
-              {filteredTasks.map((t, index) => {
-                const shapeClass = getShapeClass(index);
-                return (
-                  <div
-                    key={t.id}
-                    className={
-                      "task-card card " +
-                      (t.completed ? "task-done" : "task-todo") +
-                      " " +
-                      shapeClass
-                    }
-                    draggable
-                    onDragStart={() => handleDragStart(t.id)}
-                    onDragOver={handleDragOver}
-                    onDrop={() => handleDrop(t.id)}
-                  >
-                    <div className="task-main">
-                      <input
-                        type="checkbox"
-                        checked={t.completed}
-                        onChange={() => handleToggle(t.id)}
-                        className="task-checkbox"
-                      />
-                      <input
-                        className={
-                          "task-title-input " +
-                          (t.completed ? "task-title-done" : "")
-                        }
-                        value={t.title}
-                        onChange={(e) =>
-                          handleUpdate(t.id, "title", e.target.value)
-                        }
-                      />
-                    </div>
-                    <textarea
-                      className="task-desc-input"
-                      value={t.description || ""}
-                      placeholder="Write a small note…"
+              {filteredTasks.map((t) => (
+                <div
+                  key={t.id}
+                  className={
+                    "task-card card " +
+                    (t.completed ? "task-done" : "task-todo")
+                  }
+                  draggable
+                  onDragStart={() => handleDragStart(t.id)}
+                  onDragOver={handleDragOver}
+                  onDrop={() => handleDrop(t.id)}
+                >
+                  <div className="task-main">
+                    <input
+                      type="checkbox"
+                      checked={t.completed}
+                      onChange={() => handleToggle(t.id)}
+                      className="task-checkbox"
+                    />
+                    <input
+                      className={
+                        "task-title-input " +
+                        (t.completed ? "task-title-done" : "")
+                      }
+                      value={t.title}
                       onChange={(e) =>
-                        handleUpdate(t.id, "description", e.target.value)
+                        handleUpdate(t.id, "title", e.target.value)
                       }
                     />
-                    <div className="task-footer">
-                      <span className="task-date">
-                        Created: {new Date(t.createdAt).toLocaleString()}
-                      </span>
-                      <button
-                        className="btn small danger-btn"
-                        onClick={() => handleDelete(t.id)}
-                      >
-                        Delete 🗑
-                      </button>
-                    </div>
                   </div>
-                );
-              })}
+                  <textarea
+                    className="task-desc-input"
+                    value={t.description || ""}
+                    placeholder="Write a small note…"
+                    onChange={(e) =>
+                      handleUpdate(t.id, "description", e.target.value)
+                    }
+                  />
+                  <div className="task-footer">
+                    <span className="task-date">
+                      Created: {new Date(t.createdAt).toLocaleString()}
+                    </span>
+                    <button
+                      className="btn small danger-btn"
+                      onClick={() => handleDelete(t.id)}
+                    >
+                      Delete 🗑
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </section>
