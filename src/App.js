@@ -1,25 +1,55 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import "./App.css";
 import AuthForm from "./components/AuthForm";
 import TaskDashboard from "./components/TaskDashboard";
-import "./App.css";
 
-export default function App() {
-  const [user, setUser] = useState(null);
+function App() {
+  const [username, setUsername] = useState(
+    localStorage.getItem("tm_username") || ""
+  );
 
+  const [theme, setTheme] = useState(
+    localStorage.getItem("tm_theme") || "light"
+  );
+
+  // Apply theme on body
   useEffect(() => {
-    const saved = localStorage.getItem("tm_username");
-    if (saved) setUser(saved);
-  }, []);
+    if (theme === "dark") {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
+    localStorage.setItem("tm_theme", theme);
+  }, [theme]);
+
+  function handleLogin(name) {
+    setUsername(name);
+  }
+
+  function handleLogout() {
+    setUsername("");
+  }
+
+  function toggleTheme() {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  }
 
   return (
     <div className="app-bg">
       <div className="app-glass">
-        {user ? (
-          <TaskDashboard username={user} onLogout={() => setUser(null)} />
+        {username ? (
+          <TaskDashboard
+            username={username}
+            onLogout={handleLogout}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+          />
         ) : (
-          <AuthForm onLogin={setUser} />
+          <AuthForm onLogin={handleLogin} />
         )}
       </div>
     </div>
   );
 }
+
+export default App;

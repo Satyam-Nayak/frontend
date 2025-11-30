@@ -244,8 +244,86 @@ body {
   font-weight: 500;
 }
 
-.navbar-logout {
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Home / Your Space button */
+.home-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
   font-size: 13px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  border: none;
+}
+
+.home-btn .home-icon {
+  font-size: 14px;
+}
+
+.home-btn.active {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+.home-btn.active .home-icon {
+  filter: brightness(1.1);
+}
+
+/* Profile icon + menu */
+.profile-wrapper {
+  position: relative;
+}
+
+.profile-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.profile-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+  padding: 4px 0;
+  min-width: 150px;
+  z-index: 30;
+}
+
+.profile-menu button {
+  width: 100%;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+  color: #111827;
+}
+
+.profile-menu button:hover {
+  background: #f3f4f6;
+}
+
+.profile-menu .danger {
+  color: #b91c1c;
 }
 
 /* Wrapper for dashboard content */
@@ -319,6 +397,17 @@ body {
   gap: 8px;
 }
 
+/* Disable hover effects for Add Task card */
+.add-card.card {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.add-card.card:hover {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
 /* ===== Tasks ===== */
 .tasks-section {
   margin-top: 10px;
@@ -353,20 +442,21 @@ body {
   border-color: #4f46e5;
 }
 
+/* === 4 cards per row grid (responsive) === */
 .tasks-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
-/* ===== Uniform task note style (like your screenshot) ===== */
+/* Uniform task note style */
 .task-card {
-  background: #fffde7;              /* light pastel yellow */
-  border: 1px solid #facc6b;        /* soft yellow border */
-  border-radius: 20px;              /* rounded corners */
+  background: #fffde7;
+  border: 1px solid #facc6b;
+  border-radius: 20px;
   position: relative;
   padding: 10px;
-  width: 260px;
+  width: 100%;
   min-height: 120px;
   display: flex;
   flex-direction: column;
@@ -384,7 +474,6 @@ body {
   cursor: grabbing;
 }
 
-/* same style for todo/done, only slight background change */
 .task-todo {
   background: #fffde7;
 }
@@ -394,7 +483,7 @@ body {
   border-color: #4ade80;
 }
 
-/* Content inside note cards */
+/* Content inside cards */
 .task-main {
   display: flex;
   align-items: center;
@@ -469,6 +558,62 @@ body {
   background: #fecaca;
 }
 
+/* ===== Settings view ===== */
+.settings-card {
+  max-width: 420px;
+}
+
+.settings-body p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.settings-label {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ===== Trash view ===== */
+.trash-card {
+  margin-top: 8px;
+}
+
+.trash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.trash-info {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.trash-task {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.trash-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trash-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: #111827;
+}
+
+.trash-desc {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #4b5563;
+}
+
 /* Empty state */
 .empty-text {
   font-size: 13px;
@@ -477,6 +622,12 @@ body {
 }
 
 /* ===== Responsive ===== */
+@media (max-width: 1200px) {
+  .tasks-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 900px) {
   .app-glass {
     border-radius: 0;
@@ -486,7 +637,7 @@ body {
   }
 
   .tasks-list {
-    justify-content: center;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -507,6 +658,6 @@ body {
   }
 
   .tasks-list {
-    justify-content: center;
+    grid-template-columns: 1fr;
   }
 }
