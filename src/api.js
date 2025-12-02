@@ -14,14 +14,25 @@ async function req(url, method, data, username) {
   });
 }
 
+// Auth
 export const register = (u, e, p) =>
   req("/api/auth/register", "POST", { username: u, email: e, password: p });
 
-export const login = (u, p) =>
-  req("/api/auth/login", "POST", { username: u, password: p });
+export const verifySignupOtp = (email, otp) =>
+  req("/api/auth/verify-otp", "POST", { email, otp });
+
+export const login = (identifier, password) =>
+  req("/api/auth/login", "POST", { identifier, password });
+
+export const sendForgotOtp = (email) =>
+  req("/api/auth/forgot", "POST", { email });
+
+export const resetPassword = (email, otp, newPassword) =>
+  req("/api/auth/reset", "POST", { email, otp, newPassword });
 
 export const getProfile = (u) => req("/api/auth/me", "GET", null, u);
 
+// Tasks
 export const getTasks = (u) => req("/api/tasks", "GET", null, u);
 export const addTask = (u, t) => req("/api/tasks", "POST", t, u);
 export const updateTask = (u, id, t) =>
