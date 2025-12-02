@@ -21,6 +21,9 @@ export const register = (u, e, p) =>
 export const verifySignupOtp = (email, otp) =>
   req("/api/auth/verify-otp", "POST", { email, otp });
 
+export const resendSignupOtp = (email) =>
+  req("/api/auth/resend-verify", "POST", { email });
+
 export const login = (identifier, password) =>
   req("/api/auth/login", "POST", { identifier, password });
 

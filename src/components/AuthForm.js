@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   login,
   register,
   verifySignupOtp,
   sendForgotOtp,
   resetPassword,
+  resendSignupOtp,
 } from "../api";
 
 export default function AuthForm({ onLogin }) {
@@ -24,11 +25,16 @@ export default function AuthForm({ onLogin }) {
   const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [verifyTimer, setVerifyTimer] = useState(0);
+  const [resetTimer, setResetTimer] = useState(0);
+
   function switchMode(next) {
     setMode(next);
     setError("");
     setInfo("");
     setOtp("");
+    setVerifyTimer(0);
+    setResetTimer(0);
     if (next === "login") {
       setPassword("");
     }
@@ -36,6 +42,21 @@ export default function AuthForm({ onLogin }) {
       setPassword("");
     }
   }
+
+  // Countdown timers
+  useEffect(() => {
+    if (mode === "verify" && verifyTimer > 0) {
+      const id = setTimeout(() => setVerifyTimer((t) => t - 1), 1000);
+      return () => clearTimeout(id);
+    }
+  }, [mode, verifyTimer]);
+
+  useEffect(() => {
+    if (mode === "reset" && resetTimer > 0) {
+      const id = setTimeout(() => setResetTimer((t) => t - 1), 1000);
+      return () => clearTimeout(id);
+    }
+  }, [mode, resetTimer]);
 
   // ===== Handlers =====
   async function handleLogin(e) {
@@ -65,6 +86,7 @@ export default function AuthForm({ onLogin }) {
       setPendingUsername(username);
       setInfo("We sent an OTP to your email. Please enter it to verify.");
       setMode("verify");
+      setVerifyTimer(60);
     } catch (err) {
       setError(err.message || "Register failed");
     } finally {
@@ -78,13 +100,28 @@ export default function AuthForm({ onLogin }) {
     setInfo("");
     setLoading(true);
     try {
-      await verifySignupOtp(pendingEmail, otp);
+      await verifySignupOtp(pendingEmail || email, otp);
       setInfo("Email verified! Logging you in...");
-      const res = await login(pendingEmail, password); // user can login with email
+      const res = await login(pendingEmail || email, password); // login with email
       localStorage.setItem("tm_username", res.username);
       onLogin(res.username);
     } catch (err) {
       setError(err.message || "Verification failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleResendVerify() {
+    setError("");
+    setInfo("");
+    setLoading(true);
+    try {
+      await resendSignupOtp(pendingEmail || email);
+      setInfo("New OTP sent to your email.");
+      setVerifyTimer(60);
+    } catch (err) {
+      setError(err.message || "Could not resend OTP");
     } finally {
       setLoading(false);
     }
@@ -100,8 +137,24 @@ export default function AuthForm({ onLogin }) {
       setPendingEmail(email);
       setInfo("If this email exists, an OTP has been sent.");
       setMode("reset");
+      setResetTimer(60);
     } catch (err) {
       setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleResendReset() {
+    setError("");
+    setInfo("");
+    setLoading(true);
+    try {
+      await sendForgotOtp(pendingEmail);
+      setInfo("If this email exists, a new OTP has been sent.");
+      setResetTimer(60);
+    } catch (err) {
+      setError(err.message || "Could not resend OTP");
     } finally {
       setLoading(false);
     }
@@ -293,6 +346,32 @@ export default function AuthForm({ onLogin }) {
               />
             </label>
 
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 4,
+                marginBottom: 4,
+                gap: 8,
+              }}
+            >
+              <span style={{ fontSize: 12, color: "#6b7280" }}>
+                {verifyTimer > 0
+                  ? `You can resend OTP in ${verifyTimer}s`
+                  : "Didn't get the code?"}
+              </span>
+              <button
+                type="button"
+                className="btn small"
+                onClick={handleResendVerify}
+                disabled={verifyTimer > 0 || loading}
+                style={{ fontSize: 11 }}
+              >
+                Resend OTP
+              </button>
+            </div>
+
             {error && <div className="badge error-badge">⚠ {error}</div>}
             {info && (
               <div className="badge" style={{ background: "#e0f2fe", color: "#075985" }}>
@@ -367,6 +446,32 @@ export default function AuthForm({ onLogin }) {
                 required
               />
             </label>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 4,
+                marginBottom: 4,
+                gap: 8,
+              }}
+            >
+              <span style={{ fontSize: 12, color: "#6b7280" }}>
+                {resetTimer > 0
+                  ? `You can resend OTP in ${resetTimer}s`
+                  : "Need a new code?"}
+              </span>
+              <button
+                type="button"
+                className="btn small"
+                onClick={handleResendReset}
+                disabled={resetTimer > 0 || loading}
+                style={{ fontSize: 11 }}
+              >
+                Resend OTP
+              </button>
+            </div>
 
             {error && <div className="badge error-badge">⚠ {error}</div>}
             {info && (
