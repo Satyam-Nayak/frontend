@@ -35,6 +35,9 @@ export const resetPassword = (email, otp, newPassword) =>
 
 export const getProfile = (u) => req("/api/auth/me", "GET", null, u);
 
+export const updateProfile = (u, body) =>
+  req("/api/auth/me", "PUT", body, u);
+
 // Tasks
 export const getTasks = (u) => req("/api/tasks", "GET", null, u);
 export const addTask = (u, t) => req("/api/tasks", "POST", t, u);
