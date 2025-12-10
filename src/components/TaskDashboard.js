@@ -219,17 +219,17 @@ export default function TaskDashboard({ username, onLogout, theme, onToggleTheme
             {menuOpen && (
               <div className="profile-menu">
                 <button type="button" onClick={openSettingsView}>
-                  ⚙ Settings
+                  😄Profile
                 </button>
                 <button type="button" onClick={openTrashView}>
-                  🗑 Trash
+                  🗑️Trash
                 </button>
                 <button
                   type="button"
                   className="danger"
                   onClick={logoutNow}
                 >
-                  🚪 Logout
+                  🚪Logout
                 </button>
               </div>
             )}
