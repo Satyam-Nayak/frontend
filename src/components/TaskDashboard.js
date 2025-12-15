@@ -8,9 +8,16 @@ import {
   getTrash,
   restoreFromTrash,
   getProfile,
+  updateProfile,
 } from "../api";
 
-export default function TaskDashboard({ username, onLogout, theme, onToggleTheme }) {
+export default function TaskDashboard({
+  username,
+  onLogout,
+  theme,
+  onToggleTheme,
+  onUsernameChange,
+}) {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -26,6 +33,12 @@ export default function TaskDashboard({ username, onLogout, theme, onToggleTheme
 
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Profile editing state
+  const [editName, setEditName] = useState("");
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
+  const [profileError, setProfileError] = useState("");
+  const [profileMessage, setProfileMessage] = useState("");
+
   async function loadTasks() {
     try {
       const data = await getTasks(username);
@@ -39,8 +52,11 @@ export default function TaskDashboard({ username, onLogout, theme, onToggleTheme
     try {
       const info = await getProfile(username);
       setProfile(info);
+      setEditName(info.username);
+      setProfileImagePreview(info.profileImage || null);
     } catch (e) {
       console.error(e);
+      setProfileError(e.message || "Could not load profile");
     }
   }
 
@@ -58,7 +74,7 @@ export default function TaskDashboard({ username, onLogout, theme, onToggleTheme
     loadTasks();
     loadProfile();
     // eslint-disable-next-line
-  }, []);
+  }, [username]);
 
   async function handleAdd(e) {
     e.preventDefault();
@@ -176,6 +192,45 @@ export default function TaskDashboard({ username, onLogout, theme, onToggleTheme
     onLogout();
   }
 
+  // Profile photo change
+  function handleProfileImageChange(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setProfileImagePreview(ev.target.result); // base64 data URL
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleRemovePhoto() {
+    setProfileImagePreview(null);
+  }
+
+  async function handleSaveProfile(e) {
+    e.preventDefault();
+    setProfileError("");
+    setProfileMessage("");
+
+    try {
+      const body = {
+        username: editName,
+        profileImage: profileImagePreview === null ? null : profileImagePreview,
+      };
+      const updated = await updateProfile(username, body);
+      setProfile(updated);
+      setProfileMessage("Profile updated successfully ✔");
+
+      // If username changed, update app-level username as well
+      if (updated.username && updated.username !== username) {
+        onUsernameChange && onUsernameChange(updated.username);
+      }
+    } catch (err) {
+      setProfileError(err.message || "Could not update profile");
+    }
+  }
+
   return (
     <div className="page dashboard-page">
       {/* Navbar */}
@@ -214,22 +269,30 @@ export default function TaskDashboard({ username, onLogout, theme, onToggleTheme
               className="profile-avatar"
               onClick={() => setMenuOpen((v) => !v)}
             >
-              {username.charAt(0).toUpperCase()}
+              {profile && profile.profileImage ? (
+                <img
+                  src={profile.profileImage}
+                  alt="profile"
+                  style={{ width: "100%", height: "100%", borderRadius: "999px", objectFit: "cover" }}
+                />
+              ) : (
+                username.charAt(0).toUpperCase()
+              )}
             </button>
             {menuOpen && (
               <div className="profile-menu">
                 <button type="button" onClick={openSettingsView}>
-                  😄Profile
+                  😄 Profile
                 </button>
                 <button type="button" onClick={openTrashView}>
-                  🗑️Trash
+                  🗑️ Trash
                 </button>
                 <button
                   type="button"
                   className="danger"
                   onClick={logoutNow}
                 >
-                  🚪Logout
+                  🚪 Logout
                 </button>
               </div>
             )}
@@ -378,11 +441,68 @@ export default function TaskDashboard({ username, onLogout, theme, onToggleTheme
           <section className="card settings-card">
             <h3 className="section-title">Profile</h3>
             {profile ? (
-              <div className="settings-body">
-                <p>
-                  <span className="settings-label">Username:</span>{" "}
-                  {profile.username}
+              <form className="settings-body" onSubmit={handleSaveProfile}>
+                {/* Photo row */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginBottom: "12px",
+                  }}
+                >
+                  <div
+                    className="profile-avatar"
+                    style={{ width: 56, height: 56, fontSize: 22 }}
+                  >
+                    {profileImagePreview ? (
+                      <img
+                        src={profileImagePreview}
+                        alt="preview"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: "999px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      (editName || username).charAt(0).toUpperCase()
+                    )}
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProfileImageChange}
+                      style={{ fontSize: 12 }}
+                    />
+                    <button
+                      type="button"
+                      className="btn small"
+                      onClick={handleRemovePhoto}
+                    >
+                      Remove photo
+                    </button>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: 13, margin: "0 0 10px", color: "#6b7280" }}>
+                  You can upload a small square photo. If you remove it, we’ll show
+                  your initial again.
                 </p>
+
+                <label className="input-label">
+                  Username
+                  <input
+                    className="input"
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    required
+                  />
+                </label>
+
                 <p>
                   <span className="settings-label">Email:</span>{" "}
                   {profile.email}
@@ -393,7 +513,27 @@ export default function TaskDashboard({ username, onLogout, theme, onToggleTheme
                     ? new Date(profile.createdAt).toLocaleString()
                     : "N/A"}
                 </p>
-              </div>
+
+                {profileError && (
+                  <div className="badge error-badge">⚠ {profileError}</div>
+                )}
+                {profileMessage && (
+                  <div
+                    className="badge"
+                    style={{ background: "#dcfce7", color: "#166534" }}
+                  >
+                    ✔ {profileMessage}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="btn primary-btn"
+                  style={{ marginTop: 8 }}
+                >
+                  Save changes 💾
+                </button>
+              </form>
             ) : (
               <p className="empty-text">Loading profile…</p>
             )}

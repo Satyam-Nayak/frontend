@@ -24,14 +24,21 @@ function App() {
 
   function handleLogin(name) {
     setUsername(name);
+    localStorage.setItem("tm_username", name);
   }
 
   function handleLogout() {
     setUsername("");
+    localStorage.removeItem("tm_username");
   }
 
   function toggleTheme() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  }
+
+  function handleUsernameChange(newName) {
+    setUsername(newName);
+    localStorage.setItem("tm_username", newName);
   }
 
   return (
@@ -43,6 +50,7 @@ function App() {
             onLogout={handleLogout}
             theme={theme}
             onToggleTheme={toggleTheme}
+            onUsernameChange={handleUsernameChange}
           />
         ) : (
           <AuthForm onLogin={handleLogin} />
