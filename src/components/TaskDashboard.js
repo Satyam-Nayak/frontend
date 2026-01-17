@@ -236,7 +236,9 @@ export default function TaskDashboard({
       {/* Navbar */}
       <header className="navbar">
         <div className="navbar-left">
-          <p className="navbar-greeting">Hey {username} 👋</p>
+          <p className="navbar-greeting">
+            Hey {username} <span className="wave-hand">👋</span>
+            </p>
           <p className="navbar-subtitle">
             Plan, organize, and win your day 🌟
           </p>
