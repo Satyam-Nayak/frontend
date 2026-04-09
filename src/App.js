@@ -12,6 +12,7 @@ function App() {
     localStorage.getItem("tm_theme") || "light"
   );
 
+
   // Apply theme on body
   useEffect(() => {
     if (theme === "dark") {
@@ -61,3 +62,5 @@ function App() {
 }
 
 export default App;
+
+//new Start of file
